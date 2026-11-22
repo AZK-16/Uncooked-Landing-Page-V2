@@ -186,6 +186,171 @@
     .marquee-track { animation: none; }
   }
 
+  /* ---------- how it works — sticky scroll stage ---------- */
+
+  .how {
+    --mock-w: 340px;              /* mockup width — stage is laid out around it */
+    --step-scroll: 90svh;         /* scroll distance per step */
+    position: relative;
+    height: calc((100svh - var(--nav-h)) + 4 * var(--step-scroll));
+  }
+
+  .how-stage {
+    position: sticky;
+    top: var(--nav-h);
+    height: calc(100svh - var(--nav-h));
+    overflow: hidden;
+  }
+
+  /* mockup — pinned to the horizontal centre of the page at every step */
+  .how-mock {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 30px);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--mock-w);
+    aspect-ratio: 10 / 15;
+    background: #dcdcdc;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    color: var(--ink-3);
+  }
+
+  /* copy — sits just right of the mockup, so the mockup never shifts */
+  .how-copy {
+    position: absolute;
+    left: calc(50% + var(--mock-w) / 2 + 48px);
+    top: calc(50% - 30px);   /* same centre line as .how-mock */
+    transform: translateY(-50%);
+    z-index: 2;
+    width: min(380px, 28vw);
+    text-align: left;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .how-copy.is-swapping { opacity: 0; transform: translateY(calc(-50% + 8px)); }
+
+  .how-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .how-pill::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--ink-3);
+  }
+
+  .how-copy h2 {
+    margin: 16px 0 0;
+    font-size: clamp(30px, 2.9vw, 42px);
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .how-copy p {
+    margin: 16px 0 0;
+    font-size: clamp(15px, 1.4vw, 19px);
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  /* orbit — plain circles pinned to the rings; scroll turns the whole group,
+     the way the production page drives its orbit (rotation from scroll, not a timer) */
+  .orbit {
+    --orbit-d: 640px;
+    position: absolute;
+    left: calc(50% - var(--mock-w) / 2 - 40px);
+    top: calc(50% - 30px);
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    width: var(--orbit-d);
+    height: var(--orbit-d);
+    pointer-events: none;
+  }
+
+  .orbit-rings,
+  .orbit-dots {
+    position: absolute;
+    inset: 0;
+    /* no animation: index.html's scroll handler sets the rotation */
+  }
+
+  .orbit-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed var(--line);
+    border-radius: 999px;
+  }
+  .orbit-ring.is-inner { inset: 12.5%; }   /* r 320 -> 240 */
+
+  /* placed by script from data-r / data-a, then carried round by the rotation */
+  .orbit-dot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    transform: translate(-50%, -50%);
+  }
+
+  /* bottom step nav */
+  .how-nav {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    gap: 2px;
+    max-width: calc(100% - 32px);
+    padding: 6px;
+    background: var(--ink);
+    border-radius: var(--radius-pill);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .how-nav::-webkit-scrollbar { display: none; }
+
+  .how-nav button {
+    padding: 10px 18px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: #bdbdbd;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+  .how-nav button:hover { color: var(--surface); }
+  .how-nav button[aria-current="true"] {
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
   /* ---------- sticky qr card (bottom right) ---------- */
 
   .qr-card {
@@ -298,6 +463,21 @@
     .hero { padding: 32px 16px 56px; }
     .btn { width: 100%; max-width: 320px; }
     .marquee { --card-w: 170px; --card-h: 90px; --card-gap: 20px; padding: 48px 0 64px; }
+    .how { --mock-w: 230px; --step-scroll: 80svh; }
+    .how-mock { top: 26%; font-size: 40px; }
+    .how-copy {
+      left: 50%;
+      top: auto;
+      bottom: 104px;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .how-copy.is-swapping { transform: translateX(-50%) translateY(8px); }
+    .orbit { display: none; }
+    .how-nav { bottom: 16px; }
+    .how-nav button { padding: 9px 13px; font-size: 13px; }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -330,6 +510,136 @@
       <div class="marquee-track" id="marquee-track" aria-hidden="true"></div>
     </div>
   </section>
+
+  <!-- ===== how it works — sticky scroll, 4 steps ===== -->
+  <section class="how" id="how-it-works" aria-label="how it works">
+    <div class="how-stage">
+
+      <!-- orbiting placeholder circles — scroll carries them up along the rings -->
+      <div class="orbit" aria-hidden="true">
+        <div class="orbit-rings" id="orbit-rings">
+          <div class="orbit-ring"></div>
+          <div class="orbit-ring is-inner"></div>
+        </div>
+        <div class="orbit-dots" id="orbit-dots">
+          <span class="orbit-dot" data-r="320" data-a="140"></span>
+          <span class="orbit-dot" data-r="320" data-a="170"></span>
+          <span class="orbit-dot" data-r="320" data-a="200"></span>
+          <span class="orbit-dot" data-r="240" data-a="155"></span>
+          <span class="orbit-dot" data-r="240" data-a="188"></span>
+        </div>
+      </div>
+
+      <!-- mockup placeholder — number swaps as you scroll -->
+      <div class="how-mock" id="how-mock" aria-hidden="true">01</div>
+
+      <!-- copy — swaps as you scroll -->
+      <div class="how-copy" id="how-copy">
+        <span class="how-pill">app releasing soon</span>
+        <h2>build your passport</h2>
+        <p>a video pitch and the best thing you've made or done. once, on the platform.</p>
+      </div>
+
+      <!-- step nav — highlight travels right as you scroll -->
+      <nav class="how-nav" id="how-nav" aria-label="how it works steps"></nav>
+
+    </div>
+  </section>
+
+<script>
+/* ============================================================
+   how it works — scroll position drives the active step
+   ============================================================ */
+(() => {
+  const STEPS = [
+    { n: '01', label: 'build passport', title: 'build your passport',
+      body: "a video pitch and the best thing you've made or done. once, on the platform." },
+    { n: '02', label: 'get matched', title: 'get matched',
+      body: 'meet the bar and roles come to you. we ping your phone when one fits.' },
+    { n: '03', label: 'apply', title: 'apply in minutes',
+      body: '3 voice notes from your phone, or record on the platform. under 5 minutes. from the bus if you want.' },
+    { n: '04', label: 'hear back', title: 'hear back. always.',
+      body: "from an actual human at the startup. not a bot. not an AI recruiter. it's the rule." }
+  ];
+
+  const section = document.getElementById('how-it-works');
+  const stage   = section.querySelector('.how-stage');
+  const mock    = document.getElementById('how-mock');
+  const copy    = document.getElementById('how-copy');
+  const nav     = document.getElementById('how-nav');
+  const rings   = document.getElementById('orbit-rings');
+  const dots    = document.getElementById('orbit-dots');
+
+  /* each circle sits at a fixed radius/angle on its ring; the group rotates */
+  dots.querySelectorAll('.orbit-dot').forEach(dot => {
+    const r = parseFloat(dot.dataset.r);
+    const a = parseFloat(dot.dataset.a) * Math.PI / 180;
+    dot.style.left = `calc(50% + ${(r * Math.cos(a)).toFixed(1)}px)`;
+    dot.style.top  = `calc(50% + ${(r * Math.sin(a)).toFixed(1)}px)`;
+  });
+  const SWEEP = 60;   /* degrees travelled over the whole section */
+
+  /* build the bottom nav from the step list */
+  const buttons = STEPS.map((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = s.label;
+    b.addEventListener('click', () => scrollToStep(i));
+    nav.appendChild(b);
+    return b;
+  });
+
+  const travel = () => section.offsetHeight - stage.offsetHeight;   // scrollable distance
+  const stuckTop = () => parseFloat(getComputedStyle(stage).top) || 0;
+
+  function scrollToStep(i) {
+    const start = section.getBoundingClientRect().top + window.scrollY - stuckTop();
+    window.scrollTo({ top: start + travel() * ((i + 0.5) / STEPS.length), behavior: 'smooth' });
+  }
+
+  let current = -1;
+  function render(i) {
+    if (i === current) return;
+    const first = current === -1;
+    current = i;
+    const s = STEPS[i];
+
+    buttons.forEach((b, j) => b.setAttribute('aria-current', String(j === i)));
+
+    const paint = () => {
+      mock.textContent = s.n;
+      copy.innerHTML = `<span class="how-pill">app releasing soon</span><h2>${s.title}</h2><p>${s.body}</p>`;
+      copy.classList.remove('is-swapping');
+    };
+
+    if (first) return paint();
+    copy.classList.add('is-swapping');          /* fade out, swap, fade back in */
+    setTimeout(paint, 180);
+  }
+
+  function update() {
+    const top = section.getBoundingClientRect().top - stuckTop();
+    const p = Math.min(Math.max(-top / travel(), 0), 0.9999);
+
+    /* scroll angle: circles climb the ring instead of drifting on a timer */
+    dots.style.transform = `rotate(${(p * SWEEP).toFixed(2)}deg)`;
+    rings.style.transform = `rotate(${(p * SWEEP * 0.4).toFixed(2)}deg)`;
+
+    render(Math.floor(p * STEPS.length));
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  };
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  update();
+})();
+</script>
 
   <!-- ===== sticky qr card ===== -->
   <aside class="qr-card" id="qr-card">
