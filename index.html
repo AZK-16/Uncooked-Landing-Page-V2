@@ -463,6 +463,135 @@
     color: var(--ink-3);
   }
 
+  /* ---------- our belief (sticky scroll, left-to-right text reveal) ---------- */
+
+  .belief {
+    --reveal-scroll: 200svh;   /* scroll spent darkening-in the copy */
+    --flip-scroll:    90svh;   /* scroll spent on the light-mode answer */
+    --belief-bg:   #1f1f1f;    /* dark, but short of stark black */
+    --belief-text: #f2f0ed;
+    --belief-mute: #9a9a9a;
+    position: relative;
+    height: calc((100svh - var(--nav-h)) + var(--reveal-scroll) + var(--flip-scroll));
+    background: var(--belief-bg);
+    transition: background-color .55s ease;
+  }
+
+  /* phase 2 — same section, flipped to light once the copy is fully revealed */
+  .belief.is-flipped { --belief-bg: var(--bg); }
+
+  .belief-stage {
+    position: sticky;
+    top: var(--nav-h);
+    height: calc(100svh - var(--nav-h));
+    display: flex;
+    align-items: center;
+    padding-bottom: 9svh;      /* nudges the centred copy up off the midline */
+    overflow: hidden;
+  }
+
+  /* the two phases stack in the same cell and cross-fade */
+  .belief-swap { display: grid; width: 100%; position: relative; z-index: 1; }
+
+  /* cursor trail — light phase only, sits behind the copy */
+  .belief-trail {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* each dot is a circular company logo with a white ring, like a profile chip */
+  .trail-dot {
+    position: absolute;
+    border-radius: 999px;
+    border: 4px solid var(--surface);
+    background: #cfcfcf center / cover no-repeat;
+    background-clip: padding-box;
+    box-shadow: 0 2px 10px rgba(0,0,0,.10);
+    transform: translate(-50%, -50%);
+    animation: trail-fade 1.05s cubic-bezier(.3,0,.3,1) forwards;
+  }
+
+  @keyframes trail-fade {
+    from { opacity: .95; transform: translate(-50%, -50%) scale(1); }
+    to   { opacity: 0;   transform: translate(-50%, -50%) scale(.55); }
+  }
+
+  .belief-phase {
+    grid-area: 1 / 1;
+    transition: opacity .5s ease;
+  }
+  /* each phase keeps its own ink, so the one fading out never changes colour */
+  .belief-phase.is-dark  { --belief-text: #f2f0ed;     --belief-mute: #9a9a9a; }
+  .belief-phase.is-light { --belief-text: var(--ink);  --belief-mute: var(--ink-3); }
+
+  .belief-phase.is-light { opacity: 0; pointer-events: none; }
+  .belief.is-flipped .belief-phase.is-dark  { opacity: 0; pointer-events: none; }
+  .belief.is-flipped .belief-phase.is-light { opacity: 1; pointer-events: auto; }
+
+  .belief-inner {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+    display: grid;
+    /* columns size to their content so the pair sits centred on the page */
+    grid-template-columns: max-content minmax(0, 500px);
+    justify-content: center;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;       /* title sits on the page's horizontal midline */
+  }
+
+  /* left column — statement */
+  .belief-left h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(36px, 4.6vw, 66px);
+    line-height: 1.04;
+    letter-spacing: -.04em;
+    font-weight: 700;
+    color: var(--belief-text);
+  }
+
+  .belief-left h2 em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    color: var(--belief-mute);
+  }
+
+  /* right column — body copy that lights up as it scrolls */
+  .belief-right {
+    max-width: 500px;          /* narrower measure = a taller column of text */
+  }
+
+  .belief-right p {
+    margin: 0 0 22px;
+    font-size: clamp(16px, 1.55vw, 21px);
+    line-height: 1.62;
+    font-weight: 500;
+    color: var(--belief-text);
+    text-align: justify;
+    text-align-last: left;     /* last line runs normal — no stretched gaps */
+    hyphens: none;
+  }
+  .belief-right p:last-child { margin-bottom: 0; }
+
+  .belief-cta { margin-top: 32px; }
+
+  .belief-right .w {
+    opacity: .18;              /* starting state: barely there */
+    will-change: opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .belief-right .w { opacity: 1 !important; }
+    .belief, .belief-phase { transition: none; }
+  }
+
   /* ---------- sticky qr card (bottom right) ---------- */
 
   .qr-card {
@@ -609,6 +738,18 @@
     .diff-card:nth-child(3),
     .diff-card:nth-child(4) { transform: none; }
     .diff-card:hover { transform: translateY(-6px); }
+    .belief {
+      --reveal-scroll: 150svh;
+      --flip-scroll: 70svh;
+    }
+    .belief-stage { align-items: flex-start; padding-top: 24px; padding-bottom: 0; }
+    .belief-inner {
+      grid-template-columns: 1fr;
+      justify-content: stretch;
+      gap: 28px;
+    }
+    .belief-right { max-width: none; }
+    .belief-right p { margin-bottom: 16px; }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -774,6 +915,9 @@
 })();
 </script>
 
+  <!-- ===== passport — placeholder, one screen tall ===== -->
+  <section class="section-stub" id="passport">passport section</section>
+
   <!-- ===== our difference — fanned, overlapping cards ===== -->
   <section class="diff" id="our-difference" aria-label="our difference">
     <header class="diff-head">
@@ -800,8 +944,46 @@
     </div>
   </section>
 
-  <!-- ===== passport — placeholder, one screen tall ===== -->
-  <section class="section-stub" id="passport">passport section</section>
+  <!-- ===== our belief — sticky scroll, left-to-right text reveal ===== -->
+  <section class="belief" id="our-belief" aria-label="our belief">
+    <div class="belief-stage">
+      <div class="belief-swap">
+
+      <!-- phase 1 — dark; the copy lights up left to right as you scroll -->
+      <div class="belief-inner belief-phase is-dark">
+
+        <div class="belief-left">
+          <h2>the job market <br /> isn't broken. <br /> it's cooked.</h2>
+        </div>
+
+        <div class="belief-right" id="belief-copy">
+        <p>software ranks you by keywords before any person looks. a recruiter gets about 7 seconds with your CV, if they see it at all. qualified people get filtered out for not matching the wording exactly. most ghosting happens right after you hit submit.</p>
+        <p>rejection emails go out at 1:30 in the morning. nobody was awake. nobody read it.</p>
+        <p>nobody is judging what you can do. a machine is skimming what you wrote about it.</p>
+        <p>we've mentored over 100 people into roles. we've watched strong people send 200 applications into silence.</p>
+        </div>
+
+      </div>
+
+      <!-- phase 2 — light; the answer -->
+      <div class="belief-inner belief-phase is-light">
+
+        <div class="belief-left">
+          <h2>so we built <br /> the opposite.</h2>
+        </div>
+
+        <div class="belief-right">
+          <p>startups see your actual work, verified, before the first call. a human reviews every application. and every single one gets an answer.</p>
+          <div class="belief-cta">
+            <button class="btn btn-primary" type="button">get seen</button>
+          </div>
+        </div>
+
+      </div>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ===== sticky qr card ===== -->
   <aside class="qr-card" id="qr-card">
@@ -1027,6 +1209,117 @@ class UncookedNav extends HTMLElement {
   }
 }
 customElements.define('uncooked-nav', UncookedNav);
+</script>
+
+<script>
+/* ---- our belief: scroll drives a left-to-right darkening of the copy ---- */
+(() => {
+  const section = document.getElementById('our-belief');
+  const copy    = document.getElementById('belief-copy');
+  if (!section || !copy) return;
+  const stage = section.querySelector('.belief-stage');
+
+  /* split every paragraph into word spans so each can be lit individually */
+  const words = [];
+  copy.querySelectorAll('p').forEach(p => {
+    const frag = document.createDocumentFragment();
+    p.textContent.trim().split(/\s+/).forEach(w => {
+      const el = document.createElement('span');
+      el.className = 'w';
+      el.textContent = w;
+      frag.append(el, document.createTextNode(' '));
+      words.push(el);
+    });
+    p.textContent = '';
+    p.appendChild(frag);
+  });
+
+  const DIM     = 0.18;   /* starting opacity */
+  const FEATHER = 12;     /* words in the soft edge of the wipe */
+
+  const stuckTop = () => parseFloat(getComputedStyle(stage).top) || 0;
+  const travel   = () => Math.max(section.offsetHeight - stage.offsetHeight, 1);
+
+  /* the reveal finishes part-way down the section; the rest is the flip */
+  const REVEAL_END = 0.70;
+  const FLIP_AT    = 0.76;
+  const FLIP_BACK  = 0.72;   /* hysteresis, so the cross-fade can't flicker */
+  let flipped = false;
+
+  function update() {
+    const top = section.getBoundingClientRect().top - stuckTop();
+    const p   = Math.min(Math.max(-top / travel(), 0), 1);
+
+    const rp   = Math.min(p / REVEAL_END, 1);
+    const head = rp * (words.length + FEATHER);  /* leading edge of the wipe */
+    for (let i = 0; i < words.length; i++) {
+      const t = Math.min(Math.max((head - i) / FEATHER, 0), 1);
+      words[i].style.opacity = (DIM + (1 - DIM) * t).toFixed(3);
+    }
+
+    if (!flipped && p >= FLIP_AT)      { flipped = true;  section.classList.add('is-flipped'); }
+    else if (flipped && p < FLIP_BACK) { flipped = false; section.classList.remove('is-flipped'); }
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  };
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* ---- our belief: grey circles trail the cursor, light phase only ---- */
+(() => {
+  const section = document.getElementById('our-belief');
+  if (!section) return;
+  const stage = section.querySelector('.belief-stage');
+  if (!stage) return;
+
+  const layer = document.createElement('div');
+  layer.className = 'belief-trail';
+  layer.setAttribute('aria-hidden', 'true');
+  stage.prepend(layer);
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const LOGOS = [
+    'assets/logos/logo-01.png', 'assets/logos/logo-02.png', 'assets/logos/logo-03.png',
+    'assets/logos/logo-04.png', 'assets/logos/logo-05.png', 'assets/logos/logo-06.png',
+    'assets/logos/logo-07.png'
+  ];
+  LOGOS.forEach(src => { const i = new Image(); i.src = src; });   /* warm the cache */
+
+  const MIN_DIST = 76;          /* px of travel between dots */
+  let lx = null, ly = null, next = 0;
+
+  section.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    if (!section.classList.contains('is-flipped')) { lx = ly = null; return; }
+
+    const r = stage.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    if (y < 0 || y > r.height) return;              /* outside the pinned stage */
+    if (lx !== null && Math.hypot(x - lx, y - ly) < MIN_DIST) return;
+    lx = x; ly = y;
+
+    const d = document.createElement('span');
+    const size = 62 + Math.random() * 30;
+    const src  = LOGOS[next++ % LOGOS.length];
+    d.className = 'trail-dot';
+    d.style.cssText =
+      `left:${x}px; top:${y}px; width:${size}px; height:${size}px; background-image:url("${src}")`;
+    d.addEventListener('animationend', () => d.remove());
+    layer.appendChild(d);
+  }, { passive: true });
+})();
 </script>
 
 </body>
