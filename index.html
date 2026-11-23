@@ -769,62 +769,88 @@
     to { transform: translateX(calc(-50% - var(--tm-gap) / 2)); }
   }
 
+  @keyframes tm-down {
+    from { transform: translateY(calc(-50% - var(--tm-gap) / 2)); }
+    to   { transform: translateY(0); }
+  }
+
   .tm-card {
     flex: 0 0 clamp(280px, 31vw, 390px);
     display: flex;
     flex-direction: column;
     min-height: 340px;
-    padding: 30px 30px 28px;
+    padding: 26px 28px 28px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 18px;
   }
 
-  .tm-mark {
-    font-family: var(--serif);
-    font-size: 40px;
-    line-height: .6;
-    color: var(--ink-3);
-  }
-
-  .tm-quote {
-    margin: 18px 0 0;
-    font-size: clamp(17px, 1.5vw, 21px);
-    line-height: 1.4;
-    letter-spacing: -.02em;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .tm-quote::after { content: "”"; font-family: var(--serif); }
-
-  /* person — grey avatar placeholder, name over role */
-  .tm-person {
-    margin-top: auto;
-    padding-top: 28px;
+  /* top row — avatar placeholder left, track tag right */
+  .tm-card-top {
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: space-between;
+    gap: 16px;
   }
 
   .tm-avatar {
     flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     border-radius: 999px;
-    background: #dcdcdc;
+    background: #ececec;
+    border: 1px solid var(--line-soft);
+  }
+
+  .tm-tag {
+    flex: 0 0 auto;
+    padding: 9px 17px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .tm-mark {
+    display: block;
+    margin-top: 22px;
+    font-family: var(--serif);
+    font-size: 54px;
+    line-height: .5;
+    font-weight: 700;
+    color: var(--ink-3);
+  }
+
+  .tm-quote {
+    margin: 24px 0 0;
+    font-size: clamp(16px, 1.45vw, 20px);
+    line-height: 1.45;
+    letter-spacing: -.02em;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  /* person — name over the context line, no second avatar */
+  .tm-person {
+    margin-top: auto;
+    padding-top: 30px;
   }
 
   .tm-name {
     display: block;
     font-size: 15px;
     font-weight: 700;
+    letter-spacing: -.01em;
     color: var(--ink);
   }
 
   .tm-role {
     display: block;
-    margin-top: 2px;
-    font-size: 13px;
+    margin-top: 4px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--ink-3);
   }
@@ -1411,18 +1437,31 @@
     .hero { padding: 32px 16px 56px; }
     .btn { width: 100%; max-width: 320px; }
     .marquee { --card-w: 170px; --card-h: 90px; --card-gap: 20px; padding: 48px 0 64px; }
-    .how { --mock-w: 230px; --step-scroll: 80svh; }
-    .how-mock { top: 26%; font-size: 40px; }
+    .how { --mock-w: min(270px, 62vw); --step-scroll: 80svh; }
+    /* stacked flow instead of absolute placement: copy, then the rectangle */
+    .how-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 8px 0 72px;
+    }
     .how-copy {
-      left: 50%;
-      top: auto;
-      bottom: 104px;
+      position: static;
+      order: 1;
       width: calc(100% - 32px);
       max-width: 420px;
-      transform: translateX(-50%);
+      min-height: 0;
+      transform: none;
       text-align: center;
     }
-    .how-copy { min-height: 210px; }
+    .how-mock {
+      position: static;
+      order: 2;
+      transform: none;
+      font-size: 44px;
+    }
     .orbit { display: none; }
     .how-nav { bottom: 16px; }
     .how-nav button { padding: 9px 13px; font-size: 13px; }
@@ -1449,29 +1488,68 @@
       --reveal-scroll: 150svh;
       --flip-scroll: 70svh;
     }
-    .belief-stage { align-items: flex-start; padding-top: 24px; padding-bottom: 0; }
+    /* stacked: the whole block sits in the middle of the screen, centred */
+    .belief-stage { align-items: center; padding: 0 0 3svh; }
     .belief-inner {
       grid-template-columns: 1fr;
       justify-content: stretch;
-      gap: 28px;
+      justify-items: center;
+      align-content: center;     /* rows hug their copy instead of stretching */
+      gap: 18px;
+      text-align: center;
     }
-    .belief-right { max-width: none; }
-    .belief-right p { margin-bottom: 16px; }
+    .belief-left h2 {
+      text-align: center;
+      font-size: clamp(26px, 6.6vw, 42px);
+    }
+    .br-wide { display: none; }  /* the dark title falls to two lines here */
+    .belief-right { max-width: 520px; }
+    .belief-right p {
+      margin-bottom: 14px;
+      text-align: center;
+      text-align-last: center;
+    }
+    .belief-cta { text-align: center; margin-top: 24px; }
+    .belief-cta .btn { width: auto; max-width: none; }
     .tm { padding: 88px 0 104px; }
     .tm-head { margin-bottom: 40px; }
     .tm-head h2 { white-space: normal; font-size: clamp(30px, 7.4vw, 42px); }
-    .tm-rail { --tm-gap: 16px; --tm-speed: 50s; max-width: 92vw; }
-    .tm-card { flex-basis: min(300px, 82vw); min-height: 300px; padding: 24px; }
+    /* stacked: the rail flows downward instead of sideways */
+    .tm-rail {
+      --tm-gap: 16px;
+      --tm-speed: 48s;
+      max-width: 92vw;
+      height: 78svh;
+      -webkit-mask-image: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
+              mask-image: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
+    }
+    .tm-track {
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+      animation-name: tm-down;
+    }
+    .tm-card { flex: 0 0 auto; width: 100%; min-height: 0; padding: 22px; }
+    .tm-mark { margin-top: 18px; font-size: 46px; }
+    .tm-quote { margin-top: 20px; }
+    .tm-person { padding-top: 24px; }
     .faq { padding: 80px 0 96px; }
     .faq { padding: 72px 0 84px; }
     .faq-inner { grid-template-columns: 1fr; gap: 28px; }
-    .faq-inner h2 { margin-top: 0; font-size: clamp(30px, 7.4vw, 42px); }
-    .faq-left { padding-left: 0; }
-    .faq-figure { width: 180px; margin: 28px auto 0 0; }
-    .faq-q { padding: 16px 2px; font-size: 16px; }
-    .faq-a p { padding: 0 32px 20px 2px; }
+    .faq-inner h2 {
+      margin-top: 0;
+      font-size: clamp(26px, 7vw, 40px);
+      text-wrap: balance;               /* one line, two if it must */
+    }
+    .faq-left { padding-left: 0; text-align: center; }
+    .faq-figure { display: none; }      /* square placeholder is desktop only */
+    .faq-list { border-top-color: var(--line); }
+    .faq-q { padding: 18px 0; gap: 16px; font-size: 16.5px; }
+    .faq-a p { padding: 0 28px 20px 0; }
     .closer { padding: 96px 16px 88px; }
     .closer-card { grid-template-columns: 1fr; gap: 28px; padding: 24px; border-radius: 20px; }
+    .closer-copy { text-align: center; }
+    .closer-copy p { margin-left: auto; margin-right: auto; }
     .closer-actions { margin-top: 24px; }
     .foot-inner { grid-template-columns: 1fr; gap: 26px; padding: 56px 16px 44px; }
     .foot-nav { justify-content: flex-start; }
@@ -1481,7 +1559,12 @@
     .mission-head { margin-bottom: 48px; }
     .mission-head h2 { font-size: clamp(30px, 7.4vw, 42px); }
     .mission-flow { grid-template-columns: 1fr; row-gap: 40px; }
-    .mission-p { max-width: none; opacity: 1; }
+    .mission-p {
+      max-width: none;
+      opacity: 1;
+      text-align: center;
+      text-align-last: center;
+    }
     .mission-p.is-right { grid-column: 1; justify-self: start; }
     .mission-spine, .mission-dot { display: none; }
     .mission-figure { margin-top: 56px; border-radius: 14px; }
@@ -1489,11 +1572,14 @@
     .mission-outro .mission-sources { font-size: 11.5px; }
     .pp { padding: 176px 0 56px; }
     .pp-inner { grid-template-columns: 1fr; gap: 36px; }
-    .pp-left { position: static; }
+    /* stacked: the sticky column becomes a centred header */
+    .pp-left { position: static; text-align: center; }
+    .pp-cta .btn { width: auto; max-width: none; }
     .pp-cards::before, .pp-card::before { display: none; }
-    .pp-card { grid-template-columns: 1fr; padding: 20px; opacity: 1; }
-    .pp-media { min-height: 150px; aspect-ratio: 16 / 10; }
-    .signin-pill { right: 12px; padding: 0 15px; font-size: 13px; }
+    /* cards keep their shape — copy left, image right */
+    .pp-card { padding: 18px; gap: 16px; opacity: 1; }
+    .pp-media { min-height: 120px; }
+    .signin-pill { display: none; }   /* no room beside the full-width nav */
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -1758,7 +1844,7 @@
       <div class="belief-inner belief-phase is-dark">
 
         <div class="belief-left">
-          <h2>the job market <br /> isn't broken. <br /> it's cooked.</h2>
+          <h2>the job market <br class="br-wide" /> isn't broken. <br /> it's cooked.</h2>
         </div>
 
         <div class="belief-right" id="belief-copy">
@@ -1854,64 +1940,66 @@
     <div class="tm-rail">
       <div class="tm-track" id="tm-track">
       <article class="tm-card">
-        <span class="tm-mark" aria-hidden="true">“</span>
-        <p class="tm-quote">i recorded three voice notes on the bus home. that was the whole application.</p>
-        <footer class="tm-person">
+        <header class="tm-card-top">
           <span class="tm-avatar" aria-hidden="true"></span>
-          <span class="tm-meta">
-            <span class="tm-name">maya r.</span>
-            <span class="tm-role">final year cs, manchester</span>
-          </span>
+        </header>
+        <span class="tm-mark" aria-hidden="true">&ldquo;</span>
+        <p class="tm-quote">didn't get the role. but I heard back in 5 days with an actual reason. first time that's ever happened. I'll be using it again.</p>
+        <footer class="tm-person">
+          <span class="tm-name">[first name]</span>
+          <span class="tm-role">applied for a [role type], [month]</span>
         </footer>
       </article>
 
       <article class="tm-card">
-        <span class="tm-mark" aria-hidden="true">“</span>
-        <p class="tm-quote">i had an answer in four days. not a template — someone had actually watched my pitch.</p>
-        <footer class="tm-person">
+        <header class="tm-card-top">
           <span class="tm-avatar" aria-hidden="true"></span>
-          <span class="tm-meta">
-            <span class="tm-name">daniel o.</span>
-            <span class="tm-role">grad, product design</span>
-          </span>
+        </header>
+        <span class="tm-mark" aria-hidden="true">&ldquo;</span>
+        <p class="tm-quote">got the role. verified once, applied from my phone, had a call booked within the week.</p>
+        <footer class="tm-person">
+          <span class="tm-name">[first name]</span>
+          <span class="tm-role">now at [startup]</span>
         </footer>
       </article>
 
       <article class="tm-card">
-        <span class="tm-mark" aria-hidden="true">“</span>
-        <p class="tm-quote">i'd sent about 200 applications before this. this was the first time anyone replied like a person.</p>
-        <footer class="tm-person">
+        <header class="tm-card-top">
           <span class="tm-avatar" aria-hidden="true"></span>
-          <span class="tm-meta">
-            <span class="tm-name">priya s.</span>
-            <span class="tm-role">econ grad, london</span>
-          </span>
+        </header>
+        <span class="tm-mark" aria-hidden="true">&ldquo;</span>
+        <p class="tm-quote">recorded three voice notes on the bus home. that was the whole application.</p>
+        <footer class="tm-person">
+          <span class="tm-name">[first name]</span>
+          <span class="tm-role">applied for a [role type], [month]</span>
         </footer>
       </article>
 
       <article class="tm-card">
-        <span class="tm-mark" aria-hidden="true">“</span>
-        <p class="tm-quote">i built the passport once. every role after that took minutes instead of an evening.</p>
-        <footer class="tm-person">
+        <header class="tm-card-top">
           <span class="tm-avatar" aria-hidden="true"></span>
-          <span class="tm-meta">
-            <span class="tm-name">tom a.</span>
-            <span class="tm-role">self taught dev</span>
-          </span>
+        </header>
+        <span class="tm-mark" aria-hidden="true">&ldquo;</span>
+        <p class="tm-quote">built the passport once. every role after that took minutes instead of an evening.</p>
+        <footer class="tm-person">
+          <span class="tm-name">[first name]</span>
+          <span class="tm-role">now at [startup]</span>
         </footer>
       </article>
 
       <article class="tm-card">
-        <span class="tm-mark" aria-hidden="true">“</span>
-        <p class="tm-quote">knowing a human reads it changes what you bother to say. i stopped writing for a robot.</p>
-        <footer class="tm-person">
+        <header class="tm-card-top">
           <span class="tm-avatar" aria-hidden="true"></span>
-          <span class="tm-meta">
-            <span class="tm-name">aisha k.</span>
-            <span class="tm-role">msc data science</span>
-          </span>
+          <span class="tm-tag">[track]</span>
+        </header>
+        <span class="tm-mark" aria-hidden="true">&ldquo;</span>
+        <p class="tm-quote">knowing a human reads it changes what you bother to say. I stopped writing for a robot.</p>
+        <footer class="tm-person">
+          <span class="tm-name">[first name]</span>
+          <span class="tm-role">applied for a [role type], [month]</span>
         </footer>
       </article>
+
       </div>
     </div>
   </section>
@@ -1921,7 +2009,7 @@
     <div class="faq-inner">
 
       <div class="faq-left">
-        <h2>frequently <br /> asked <br /> questions</h2>
+        <h2>frequently <br class="br-wide" /> asked <br class="br-wide" /> questions</h2>
         <div class="faq-figure" aria-hidden="true"></div>
       </div>
 
@@ -2269,10 +2357,27 @@ class UncookedNav extends HTMLElement {
 
         :focus-visible { outline: 2px solid var(--ink, #1a1a1a); outline-offset: 3px; }
 
+        /* tablet — widen the pill so the links keep their place */
+        @media (max-width: 1100px) {
+          .nav { width: min(94vw, 900px); gap: 10px; }
+          a.link { font-size: 16px; padding: 6px 8px; }
+          ul { gap: 4px; }
+        }
+
+        /* phone — logo and links both stay; only the badge gives up its room */
         @media (max-width: 720px) {
-          .nav { padding: 7px 7px 7px 13px; gap: 8px; }
-          .divider, ul { display: none; }   /* collapses to logo + cta */
-          button { margin-left: auto; padding: 8px 13px; font-size: 13px; }
+          .nav { width: calc(100vw - 20px); padding: 6px 6px 6px 10px; gap: 8px; }
+          .badge { display: none; }
+          .divider { margin: 2px 0; }
+          /* links scroll sideways rather than bursting the pill */
+          ul {
+            gap: 2px; min-width: 0;
+            overflow-x: auto;
+            scrollbar-width: none; -ms-overflow-style: none;
+          }
+          ul::-webkit-scrollbar { display: none; }
+          a.link { font-size: 15px; padding: 5px 7px; }
+          button { padding: 8px 12px; font-size: 13px; gap: 5px; }
         }
       </style>
 
