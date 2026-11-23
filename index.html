@@ -995,6 +995,157 @@
     user-select: none;
   }
 
+  /* ---------- mission (paragraphs threaded on a scroll-drawn wave) ---------- */
+
+  .mission {
+    padding: 130px 0 150px;
+  }
+
+  .mission-head {
+    max-width: 1240px;
+    margin: 0 auto 90px;
+    padding: 0 clamp(20px, 4vw, 48px);
+    text-align: center;
+  }
+
+  .mission-head h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(38px, 6.6vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* the flow holds the wave behind, the paragraphs in front */
+  .mission-flow {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(48px, 10vw, 180px);
+    row-gap: clamp(64px, 9vw, 130px);
+  }
+
+  .mission-spine {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .spine-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+  .spine-fill  { fill: none; stroke: var(--ink);  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* marker riding the wave, placed by script */
+  .mission-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5.5px;
+    border-radius: 999px;
+    background: var(--ink);
+    box-shadow: 0 0 0 5px var(--bg);
+    pointer-events: none;
+  }
+
+  .mission-p {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    max-width: 430px;
+    font-size: clamp(16px, 1.75vw, 23px);
+    line-height: 1.5;
+    letter-spacing: -.02em;
+    font-weight: 500;
+    color: var(--ink);
+    opacity: .28;                /* script fades this in as the marker arrives */
+    text-align: justify;
+    text-align-last: left;
+    hyphens: none;
+  }
+
+  .mission-p.is-left  { grid-column: 1; }
+  .mission-p.is-right { grid-column: 2; justify-self: end; }
+
+  /* one paragraph per row, so each sits below the last on the opposite side */
+  .mission-p:nth-of-type(1) { grid-row: 1; }
+  .mission-p:nth-of-type(2) { grid-row: 2; }
+  .mission-p:nth-of-type(3) { grid-row: 3; }
+  .mission-p:nth-of-type(4) { grid-row: 4; }
+  .mission-p:nth-of-type(5) { grid-row: 5; }
+
+  .mission-p.is-centre {
+    grid-column: 1 / -1;
+    justify-self: center;
+    max-width: 620px;
+    text-align: center;
+    text-align-last: center;
+    font-size: clamp(18px, 2.1vw, 28px);
+    font-weight: 700;
+    letter-spacing: -.03em;
+  }
+
+  /* large placeholder block under the copy */
+  .mission-figure {
+    max-width: 760px;
+    margin: clamp(72px, 8vw, 110px) auto 0;
+    width: calc(100% - 2 * clamp(20px, 4vw, 48px));
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    background: #dcdcdc;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mission-p { opacity: 1; }
+  }
+
+  /* closing lines under the mission block */
+  .mission-outro {
+    max-width: 900px;
+    margin: clamp(48px, 5vw, 72px) auto 0;
+    padding: 0 clamp(20px, 4vw, 48px);
+    text-align: center;
+  }
+
+  .mission-outro p {
+    margin: 0;
+    font-size: clamp(16px, 1.75vw, 23px);
+    line-height: 1.5;
+    letter-spacing: -.02em;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-wrap: balance;
+  }
+
+  .mission-founder {
+    display: inline-block;
+    margin-top: 34px;
+    font-size: clamp(15px, 1.5vw, 19px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s ease;
+  }
+  .mission-founder:hover { border-color: var(--ink); }
+
+  .mission-outro .mission-sources {
+    margin: 30px 0 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #ababab;
+    text-wrap: balance;
+  }
+
   /* ---------- sticky qr card (bottom right) ---------- */
 
   .qr-card {
@@ -1173,6 +1324,16 @@
     .foot-nav { justify-content: flex-start; }
     .foot-social { justify-content: flex-start; }
     .foot-word { font-size: 21vw; }
+    .mission { padding: 80px 0 96px; }
+    .mission-head { margin-bottom: 48px; }
+    .mission-head h2 { font-size: clamp(30px, 7.4vw, 42px); }
+    .mission-flow { grid-template-columns: 1fr; row-gap: 40px; }
+    .mission-p { max-width: none; opacity: 1; }
+    .mission-p.is-right { grid-column: 1; justify-self: start; }
+    .mission-spine, .mission-dot { display: none; }
+    .mission-figure { margin-top: 56px; border-radius: 14px; }
+    .mission-outro { margin-top: 40px; }
+    .mission-outro .mission-sources { font-size: 11.5px; }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -1408,8 +1569,60 @@
     </div>
   </section>
 
-  <!-- ===== mission — placeholder, one screen tall ===== -->
-  <section class="section-stub" id="mission">mission section</section>
+  <!-- ===== mission — copy threaded on a scroll-drawn wave ===== -->
+  <section class="mission" id="mission" aria-label="why we're doing this">
+    <header class="mission-head">
+      <h2>why we're doing this.</h2>
+    </header>
+
+    <div class="mission-flow" id="mission-flow">
+      <svg class="mission-spine" id="mission-spine" aria-hidden="true">
+        <path class="spine-track" id="spine-track"></path>
+        <path class="spine-fill" id="spine-fill"></path>
+      </svg>
+      <span class="mission-dot" id="mission-dot" aria-hidden="true"></span>
+
+      <p class="mission-p is-left">
+        it's never been harder to be young and looking for work in the UK.
+        over 1 million young people are out of work or education.
+      </p>
+
+      <p class="mission-p is-right">
+        entry level roles have dropped by nearly a third since ChatGPT launched.
+        70 people now fight for every graduate job. and more than half of
+        candidates get ghosted.
+      </p>
+
+      <p class="mission-p is-left">
+        but while the old path narrows, a new one is growing. the UK is starting
+        record numbers of startups, and that's where the roles are being created.
+        real responsibility early, real skills, real rooms.
+      </p>
+
+      <p class="mission-p is-right">
+        we think what you can do should matter more than where you went or who you know.
+      </p>
+
+      <p class="mission-p is-centre">
+        that's why we're here: to help 1 million young people into meaningful
+        opportunities by 2030.
+      </p>
+    </div>
+
+    <div class="mission-figure" aria-hidden="true"></div>
+
+    <div class="mission-outro">
+      <p>
+        every offer made through the platform works towards that goal.
+        so does every room uncooked labs opens.
+      </p>
+      <a class="mission-founder" href="#">the full story, from our founder &nbsp;&rarr;</a>
+      <p class="mission-sources">
+        sources: ONS &middot; Adzuna via The Guardian &middot; ISE via Fortune
+        &middot; iHire via Fortune &middot; NatWest &amp; Beauhurst.
+      </p>
+    </div>
+  </section>
 
   <!-- ===== testimonials — horizontal card rail ===== -->
   <section class="tm" id="testimonials" aria-label="what our users are saying">
@@ -2096,6 +2309,131 @@ customElements.define('uncooked-nav', UncookedNav);
     }
   ]
 }
+</script>
+
+<script>
+/* ---- mission: scroll draws the wave and carries the marker down it ---- */
+(() => {
+  const flow  = document.getElementById('mission-flow');
+  const svg   = document.getElementById('mission-spine');
+  const track = document.getElementById('spine-track');
+  const fill  = document.getElementById('spine-fill');
+  const dot   = document.getElementById('mission-dot');
+  if (!flow || !svg || !track || !fill || !dot) return;
+
+  const paras = [...flow.querySelectorAll('.mission-p')];
+  const last  = paras[paras.length - 1];
+  let len = 0, stops = [];
+
+  /* walk the path for the length that sits at a given y (the curve only descends) */
+  function lengthAtY(y) {
+    let lo = 0, hi = len;
+    for (let i = 0; i < 24; i++) {
+      const mid = (lo + hi) / 2;
+      if (track.getPointAtLength(mid).y < y) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+
+  /* the path is rebuilt in pixel space, so nothing is distorted by scaling */
+  function build() {
+    const w = flow.clientWidth;
+    const h = flow.clientHeight;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+    const cx   = w / 2;
+    const stay = paras.slice(0, -1);
+
+    /* keep every vertical run inside the gutter, clear of the measured text */
+    const PAD = 26;
+    let amp = Math.min(120, w * 0.13);
+    stay.forEach(el => {
+      const right = el.classList.contains('is-right');
+      amp = Math.min(amp, right
+        ? el.offsetLeft - PAD - cx                       /* line stays left of it */
+        : cx - (el.offsetLeft + el.offsetWidth + PAD));  /* line stays right of it */
+    });
+    amp = Math.max(22, amp);
+
+    /* one vertical run per paragraph, joined by squared-off jogs */
+    const endY = last.offsetTop - 38;
+    const xs    = stay.map(el => cx + (el.classList.contains('is-right') ? 1 : -1) * amp);
+    const nodes = [[xs[0], 0]];
+    stay.forEach((el, i) => nodes.push([xs[i], el.offsetTop + el.offsetHeight / 2]));
+    nodes.push([cx, endY]);
+
+    const f = n => n.toFixed(1);
+    let d = `M ${f(nodes[0][0])} ${f(nodes[0][1])}`;
+    for (let i = 1; i < nodes.length; i++) {
+      const [x0, y0] = nodes[i - 1];
+      const [x1, y1] = nodes[i];
+      if (Math.abs(x1 - x0) < 1) { d += ` V ${f(y1)}`; continue; }
+
+      const dir  = x1 > x0 ? 1 : -1;
+      const ymid = (y0 + y1) / 2;
+      const r    = Math.max(2, Math.min(34, Math.abs(x1 - x0) / 2, (y1 - y0) / 2));
+
+      d += ` V ${f(ymid - r)}` +                                   /* straight down */
+           ` Q ${f(x0)} ${f(ymid)} ${f(x0 + dir * r)} ${f(ymid)}` + /* rounded corner */
+           ` H ${f(x1 - dir * r)}` +                               /* across */
+           ` Q ${f(x1)} ${f(ymid)} ${f(x1)} ${f(ymid + r)}` +      /* rounded corner */
+           ` V ${f(y1)}`;                                          /* straight down */
+    }
+
+    track.setAttribute('d', d);
+    fill.setAttribute('d', d);
+    len = track.getTotalLength();
+    fill.style.strokeDasharray = len;
+
+    /* where the marker rests: the start, each paragraph's middle, then the end */
+    stops = [0, ...stay.map(el => lengthAtY(el.offsetTop + el.offsetHeight / 2)), len];
+    update();
+  }
+
+  const TRAVEL = 0.82;                            /* of each leg spent moving... */
+  const smooth = t => t * t * (3 - 2 * t);        /* ...the rest is a pause */
+  const narrow = matchMedia('(max-width: 720px)');
+
+  function update() {
+    if (!len) return;
+    const r     = flow.getBoundingClientRect();
+    const enter = innerHeight * 0.88;             /* wave starts drawing here */
+    const exit  = innerHeight * 0.16;             /* and is finished here */
+    const span  = r.height + (enter - exit);
+    const p     = Math.min(Math.max((enter - r.top) / span, 0), 1);
+
+    /* step the marker from stop to stop: move, hold, move, hold */
+    const legs  = stops.length - 1;
+    const leg   = Math.min(Math.floor(p * legs), legs - 1);
+    const local = Math.min((p * legs - leg) / TRAVEL, 1);
+    const at    = stops[leg] + (stops[leg + 1] - stops[leg]) * smooth(local);
+
+    fill.style.strokeDashoffset = len - at;
+
+    const pt = track.getPointAtLength(at);
+    dot.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`;
+    dot.style.opacity = '1';
+
+    /* each paragraph finishes fading exactly as the marker lands on it */
+    paras.forEach((el, i) => {
+      if (narrow.matches) { el.style.opacity = ''; return; }
+      const t = i < leg ? 1 : i > leg ? 0 : smooth(local);
+      el.style.opacity = (0.28 + 0.72 * t).toFixed(3);
+    });
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  };
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', build);
+  addEventListener('load', build);
+  build();
+})();
 </script>
 
 </body>
