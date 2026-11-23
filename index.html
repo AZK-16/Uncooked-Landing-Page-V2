@@ -450,17 +450,144 @@
     .diff-card { transition: none; }
   }
 
-  /* ---------- passport (placeholder) ---------- */
+  /* ---------- passport (sticky left, stacked cards right) ---------- */
 
-  .section-stub {
-    min-height: 100svh;
+  .pp {
+    /* 256 below how-it-works, and 46 + our difference's 210 = 256 above it */
+    padding: 256px 0 46px;
+  }
+
+  .pp-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
     display: grid;
-    place-items: center;
-    padding: 40px 20px;
-    font-size: clamp(18px, 2vw, 24px);
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: clamp(48px, 7vw, 110px);
+    align-items: start;
+  }
+
+  /* left column holds still while the cards scroll past it */
+  .pp-left {
+    position: sticky;
+    top: calc(var(--nav-h) + 56px);
+    align-self: start;
+  }
+
+  .pp-eyebrow {
+    margin: 0 0 18px;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: -.02em;
+    letter-spacing: -.01em;
     color: var(--ink-3);
+  }
+
+  .pp-left h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(32px, 4.3vw, 60px);
+    line-height: 1.04;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .pp-cta { margin-top: 36px; }
+
+  /* right column — a rail with a dot per card */
+  .pp-cards {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(26px, 3vw, 44px);
+  }
+
+  .pp-cards::before {
+    content: "";
+    position: absolute;
+    left: calc(clamp(26px, 3.4vw, 52px) * -1);
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .pp-card {
+    position: relative;
+    opacity: .16;              /* script lifts this as the card scrolls up */
+    will-change: opacity;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, .46fr);
+    gap: clamp(20px, 2.4vw, 34px);
+    padding: 26px 26px 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  /* the dot fills in once its card is the one in focus */
+  .pp-card.is-on::before {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .pp-card::before {
+    content: "";
+    position: absolute;
+    left: calc(clamp(26px, 3.4vw, 52px) * -1 - 4.5px);
+    top: 32px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--ink-3);
+  }
+
+  .pp-num {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--ink-3);
+  }
+
+  .pp-card h3 {
+    margin: 16px 0 0;
+    font-size: clamp(19px, 1.7vw, 24px);
+    line-height: 1.2;
+    letter-spacing: -.03em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .pp-card p {
+    margin: 12px 0 0;
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .pp-card p.pp-note {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+
+  /* image placeholder — grey block with crossed diagonals */
+  .pp-media {
+    align-self: stretch;
+    min-height: 150px;
+    border-radius: 12px;
+    background-color: #dcdcdc;
+    background-image:
+      linear-gradient(to top right,
+        transparent calc(50% - .5px), #c4c4c4 50%, transparent calc(50% + .5px)),
+      linear-gradient(to bottom right,
+        transparent calc(50% - .5px), #c4c4c4 50%, transparent calc(50% + .5px));
   }
 
   /* ---------- our belief (sticky scroll, left-to-right text reveal) ---------- */
@@ -1146,6 +1273,32 @@
     text-wrap: balance;
   }
 
+  /* ---------- sign in pill (fixed, top right) ---------- */
+
+  .signin-pill {
+    position: fixed;
+    top: var(--nav-top);
+    right: clamp(16px, 2.6vw, 40px);
+    z-index: 51;
+    height: var(--signin-h, 56px);   /* matched to the nav pill by script */
+    display: inline-flex;
+    align-items: center;
+    padding: 0 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .signin-pill:hover { background: var(--bg); border-color: var(--ink-3); }
+
   /* ---------- sticky qr card (bottom right) ---------- */
 
   .qr-card {
@@ -1334,6 +1487,13 @@
     .mission-figure { margin-top: 56px; border-radius: 14px; }
     .mission-outro { margin-top: 40px; }
     .mission-outro .mission-sources { font-size: 11.5px; }
+    .pp { padding: 176px 0 56px; }
+    .pp-inner { grid-template-columns: 1fr; gap: 36px; }
+    .pp-left { position: static; }
+    .pp-cards::before, .pp-card::before { display: none; }
+    .pp-card { grid-template-columns: 1fr; padding: 20px; opacity: 1; }
+    .pp-media { min-height: 150px; aspect-ratio: 16 / 10; }
+    .signin-pill { right: 12px; padding: 0 15px; font-size: 13px; }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -1346,6 +1506,9 @@
   <!-- navbar component — see <uncooked-nav> definition at the foot of this file -->
   <uncooked-nav active="jobs"></uncooked-nav>
 
+  <!-- sign in — its own pill, top right of the viewport -->
+  <!-- <a class="signin-pill" href="#sign-in">sign in</a> -->
+
   <!-- ===== hero ===== -->
   <main class="hero">
     <h1>never get ghosted</h1>
@@ -1355,7 +1518,6 @@
     </p>
     <div class="cta-row">
       <button class="btn btn-primary" type="button">get seen</button>
-      <button class="btn btn-secondary" type="button">see tracker</button>
     </div>
   </main>
 
@@ -1391,7 +1553,7 @@
 
       <!-- copy — swaps as you scroll -->
       <div class="how-copy" id="how-copy">
-        <span class="how-pill">APP RELEASING SOON</span>
+        <span class="how-pill">app releasing soon</span>
         <div class="how-copy-text" id="how-copy-text">
           <h2>build your passport</h2>
           <p>a video pitch and the best thing you've made or done. once, on the platform.</p>
@@ -1499,8 +1661,67 @@
 })();
 </script>
 
-  <!-- ===== passport — placeholder, one screen tall ===== -->
-  <section class="section-stub" id="passport">passport section</section>
+  <!-- ===== passport — sticky copy left, cards right ===== -->
+  <section class="pp" id="passport" aria-label="passport">
+    <div class="pp-inner">
+
+      <div class="pp-left">
+        <h2>verify once. apply anywhere.</h2>
+        <div class="pp-cta">
+          <button class="btn btn-primary" type="button">get seen</button>
+        </div>
+      </div>
+
+      <div class="pp-cards">
+      <article class="pp-card">
+        <div>
+          <span class="pp-num">01</span>
+          <h3>pick your track</h3>
+          <p>pick the track you want. software, marketing, design, hardware, ops. a 60 second video pitch. a 3 minute walkthrough of the best thing you've made or done, with the real files behind it. a product you built, a campaign you ran, a process you fixed. 2 hours, once. that's it.</p>
+        </div>
+        <div class="pp-media" aria-hidden="true"></div>
+      </article>
+
+      <article class="pp-card">
+        <div>
+          <span class="pp-num">02</span>
+          <h3>it gets checked, for real</h3>
+          <p>we check your work against your claims. a human reviews it, and scores you on 5 things a CV can't show: communication, initiative, problem solving, strategic thinking, persistence.</p>
+        </div>
+        <div class="pp-media" aria-hidden="true"></div>
+      </article>
+
+      <article class="pp-card">
+        <div>
+          <span class="pp-num">03</span>
+          <h3>your skills get you in.</h3>
+          <p>then everyone takes the same short platform test, so you're judged on what you can do, not where you studied. meet the bar and you're in the pool founders hire from. nothing gets auto rejected by a bot.</p>
+          <p class="pp-note">can't show your work publicly? redact it, or share it with access you control.</p>
+        </div>
+        <div class="pp-media" aria-hidden="true"></div>
+      </article>
+
+      <article class="pp-card">
+        <div>
+          <span class="pp-num">04</span>
+          <h3>one stamp gets you into the pool.</h3>
+          <p>want stronger matches on another track? earn its stamp. every extra stamp sharpens your matches.</p>
+        </div>
+        <div class="pp-media" aria-hidden="true"></div>
+      </article>
+
+      <article class="pp-card">
+        <div>
+          <span class="pp-num">05</span>
+          <h3>the tracker is open to all</h3>
+          <p>and the tracker's 6,000+ external jobs? open to everyone, stamp or not, live today. you apply to those direct, so the 7 day answer covers every role through us.</p>
+        </div>
+        <div class="pp-media" aria-hidden="true"></div>
+      </article>
+      </div>
+
+    </div>
+  </section>
 
   <!-- ===== our difference — fanned, overlapping cards ===== -->
   <section class="diff" id="our-difference" aria-label="our difference">
@@ -2433,6 +2654,67 @@ customElements.define('uncooked-nav', UncookedNav);
   addEventListener('resize', build);
   addEventListener('load', build);
   build();
+})();
+</script>
+
+<script>
+/* ---- passport: cards sit faint until the scroll brings them up ---- */
+(() => {
+  const cards = [...document.querySelectorAll('.pp-card')];
+  if (!cards.length) return;
+
+  const DIM    = 0.16;
+  const narrow = matchMedia('(max-width: 720px)');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function update() {
+    const vh    = innerHeight;
+    const sharp = vh * 0.56;        /* fully lit once the top reaches here */
+    const faint = vh * 0.94;        /* barely there while it is down here */
+
+    cards.forEach(card => {
+      if (narrow.matches || reduce.matches) {
+        card.style.opacity = '';
+        card.classList.add('is-on');
+        return;
+      }
+      const top = card.getBoundingClientRect().top;
+      const t   = Math.min(Math.max((faint - top) / (faint - sharp), 0), 1);
+      card.style.opacity = (DIM + (1 - DIM) * t).toFixed(3);
+      card.classList.toggle('is-on', t > 0.85);
+    });
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  };
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+
+<script>
+/* ---- keep the sign in pill exactly as tall as the nav pill ---- */
+(() => {
+  const host = document.querySelector('uncooked-nav');
+  if (!host) return;
+
+  function sync() {
+    const pill = host.shadowRoot && host.shadowRoot.querySelector('.nav');
+    if (!pill) return;
+    const h = pill.getBoundingClientRect().height;
+    if (h) document.documentElement.style.setProperty('--signin-h', `${h}px`);
+  }
+
+  addEventListener('resize', sync);
+  addEventListener('load', sync);
+  customElements.whenDefined('uncooked-nav').then(sync);
+  sync();
 })();
 </script>
 
