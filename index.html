@@ -230,15 +230,21 @@
     transform: translateY(-50%);
     z-index: 2;
     width: min(380px, 28vw);
+    /* fixed height: the block is centred, so a taller step must not shift the pill */
+    min-height: 250px;
     text-align: left;
+  }
+
+  /* only this part swaps — the pill above it never moves or fades */
+  .how-copy-text {
+    margin-top: 16px;
     transition: opacity .25s ease, transform .25s ease;
   }
-  .how-copy.is-swapping { opacity: 0; transform: translateY(calc(-50% + 8px)); }
+  .how-copy-text.is-swapping { opacity: 0; transform: translateY(8px); }
 
   .how-pill {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
     padding: 7px 14px;
     border: 1px solid var(--line);
     border-radius: var(--radius-pill);
@@ -247,16 +253,8 @@
     font-weight: 600;
     color: var(--ink-2);
   }
-  .how-pill::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: var(--ink-3);
-  }
-
   .how-copy h2 {
-    margin: 16px 0 0;
+    margin: 0;
     font-size: clamp(30px, 2.9vw, 42px);
     line-height: 1.08;
     letter-spacing: -.035em;
@@ -349,6 +347,120 @@
     background: var(--surface);
     color: var(--ink);
     font-weight: 700;
+  }
+
+  /* ---------- our difference (fanned, overlapping cards) ---------- */
+
+  .diff {
+    --card-w: 345px;
+    --card-h: 560px;
+    --card-overlap: 52px;      /* how much each card tucks under the next */
+    position: relative;
+    min-height: 100svh;
+    padding: 210px 20px 0;
+    overflow: hidden;          /* rotated cards must not widen the page */
+  }
+
+  .diff-head {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .diff-head h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(38px, 6.6vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .diff-head p {
+    margin: 18px auto 0;
+    max-width: 560px;
+    font-size: clamp(15px, 1.8vw, 18px);
+    line-height: 1.55;
+    font-weight: 500;
+    color: var(--ink-3);
+    text-wrap: balance;
+  }
+
+  /* the fan — cards sit shoulder to shoulder and peek up from the fold */
+  .diff-cards {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 86px auto 0;
+    padding-bottom: 120px;
+    width: 100%;
+    max-width: 1240px;
+  }
+
+  .diff-card {
+    flex: 0 0 auto;
+    width: var(--card-w);
+    height: var(--card-h);
+    padding: 32px 30px;
+    border-radius: 26px;
+    background: #dcdcdc;
+    box-shadow: 0 2px 6px rgba(0,0,0,.05), 0 22px 44px rgba(0,0,0,.10);
+    transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+    will-change: transform;
+  }
+  .diff-card + .diff-card { margin-left: calc(var(--card-overlap) * -1); }
+
+  /* alternating greys + a slight fan, so the overlap reads as depth */
+  .diff-card:nth-child(1) { background: #dedede; transform: rotate(-4.5deg) translateY(16px); }
+  .diff-card:nth-child(2) { background: #2b2b2b; transform: rotate(1.5deg)  translateY(4px);  }
+  .diff-card:nth-child(3) { background: #d2d2d2; transform: rotate(-1.5deg) translateY(12px); }
+  .diff-card:nth-child(4) { background: #e4e4e4; transform: rotate(4deg)    translateY(0);    }
+
+  .diff-card:hover {
+    transform: translateY(-14px) rotate(0deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,.06), 0 32px 60px rgba(0,0,0,.16);
+    z-index: 5;
+  }
+
+  /* copy block — pinned top left of each card */
+  .diff-card h3 {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.2;
+    letter-spacing: -.03em;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: left;
+  }
+
+  .diff-card p {
+    margin: 14px 0 0;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-align: left;
+  }
+
+  .diff-card.is-dark h3 { color: #f4f4f4; }
+  .diff-card.is-dark p  { color: #b4b4b4; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .diff-card { transition: none; }
+  }
+
+  /* ---------- passport (placeholder) ---------- */
+
+  .section-stub {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 40px 20px;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    color: var(--ink-3);
   }
 
   /* ---------- sticky qr card (bottom right) ---------- */
@@ -474,10 +586,29 @@
       transform: translateX(-50%);
       text-align: center;
     }
-    .how-copy.is-swapping { transform: translateX(-50%) translateY(8px); }
+    .how-copy { min-height: 210px; }
     .orbit { display: none; }
     .how-nav { bottom: 16px; }
     .how-nav button { padding: 9px 13px; font-size: 13px; }
+    .diff {
+      --card-w: min(340px, 100%);
+      --card-h: auto;
+      padding: 120px 16px 0;
+    }
+    .diff-cards {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-top: 48px;
+      padding-bottom: 72px;
+    }
+    .diff-card { height: auto; min-height: 220px; }
+    .diff-card + .diff-card { margin-left: 0; }
+    .diff-card:nth-child(1),
+    .diff-card:nth-child(2),
+    .diff-card:nth-child(3),
+    .diff-card:nth-child(4) { transform: none; }
+    .diff-card:hover { transform: translateY(-6px); }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -535,9 +666,11 @@
 
       <!-- copy — swaps as you scroll -->
       <div class="how-copy" id="how-copy">
-        <span class="how-pill">app releasing soon</span>
-        <h2>build your passport</h2>
-        <p>a video pitch and the best thing you've made or done. once, on the platform.</p>
+        <span class="how-pill">APP RELEASING SOON</span>
+        <div class="how-copy-text" id="how-copy-text">
+          <h2>build your passport</h2>
+          <p>a video pitch and the best thing you've made or done. once, on the platform.</p>
+        </div>
       </div>
 
       <!-- step nav — highlight travels right as you scroll -->
@@ -565,7 +698,7 @@
   const section = document.getElementById('how-it-works');
   const stage   = section.querySelector('.how-stage');
   const mock    = document.getElementById('how-mock');
-  const copy    = document.getElementById('how-copy');
+  const copy    = document.getElementById('how-copy-text');
   const nav     = document.getElementById('how-nav');
   const rings   = document.getElementById('orbit-rings');
   const dots    = document.getElementById('orbit-dots');
@@ -608,7 +741,7 @@
 
     const paint = () => {
       mock.textContent = s.n;
-      copy.innerHTML = `<span class="how-pill">app releasing soon</span><h2>${s.title}</h2><p>${s.body}</p>`;
+      copy.innerHTML = `<h2>${s.title}</h2><p>${s.body}</p>`;
       copy.classList.remove('is-swapping');
     };
 
@@ -640,6 +773,35 @@
   update();
 })();
 </script>
+
+  <!-- ===== our difference — fanned, overlapping cards ===== -->
+  <section class="diff" id="our-difference" aria-label="our difference">
+    <header class="diff-head">
+      <h2>our difference</h2>
+    </header>
+
+    <div class="diff-cards">
+      <article class="diff-card">
+        <h3>startup roles come to you.</h3>
+        <p>no more hours lost searching across job boards, group chats, and socials. discover startup opportunities in one place. less searching, more applying.</p>
+      </article>
+      <article class="diff-card is-dark">
+        <h3>you never repeat the work.</h3>
+        <p>two honest hours, once. your proof travels with every application after that. no fresh brief for every company. no rewriting your story 140 times.</p>
+      </article>
+      <article class="diff-card">
+        <h3>a human always reviews you.</h3>
+        <p>nothing here is auto rejected by a bot. real review, and a real person makes the call.</p>
+      </article>
+      <article class="diff-card">
+        <h3>a response is the rule.</h3>
+        <p>every application through us gets an answer within 7 days. from an actual human at the startup. not a bot. not an AI recruiter.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== passport — placeholder, one screen tall ===== -->
+  <section class="section-stub" id="passport">passport section</section>
 
   <!-- ===== sticky qr card ===== -->
   <aside class="qr-card" id="qr-card">
