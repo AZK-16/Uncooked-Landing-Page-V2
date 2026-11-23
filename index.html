@@ -2470,7 +2470,7 @@ customElements.define('uncooked-nav', UncookedNav);
 </script>
 
 <script>
-/* ---- our belief: grey circles trail the cursor, light phase only ---- */
+/* ---- our belief: grey logo circles trail the cursor in the light phase ---- */
 (() => {
   const section = document.getElementById('our-belief');
   if (!section) return;
@@ -2493,6 +2493,23 @@ customElements.define('uncooked-nav', UncookedNav);
 
   const MIN_DIST = 76;          /* px of travel between dots */
   let lx = null, ly = null, next = 0;
+  let lastClient = null;        /* where the cursor is, flipped or not */
+
+  function spawn(x, y) {
+    const d = document.createElement('span');
+    const size = 62 + Math.random() * 30;
+    const src  = LOGOS[next++ % LOGOS.length];
+    d.className = 'trail-dot';
+    d.style.cssText =
+      `left:${x}px; top:${y}px; width:${size}px; height:${size}px; background-image:url("${src}")`;
+    d.addEventListener('animationend', () => d.remove());
+    layer.appendChild(d);
+    lx = x; ly = y;
+  }
+
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'mouse') lastClient = { x: e.clientX, y: e.clientY };
+  }, { passive: true });
 
   section.addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse') return;
@@ -2503,17 +2520,25 @@ customElements.define('uncooked-nav', UncookedNav);
     const y = e.clientY - r.top;
     if (y < 0 || y > r.height) return;              /* outside the pinned stage */
     if (lx !== null && Math.hypot(x - lx, y - ly) < MIN_DIST) return;
-    lx = x; ly = y;
-
-    const d = document.createElement('span');
-    const size = 62 + Math.random() * 30;
-    const src  = LOGOS[next++ % LOGOS.length];
-    d.className = 'trail-dot';
-    d.style.cssText =
-      `left:${x}px; top:${y}px; width:${size}px; height:${size}px; background-image:url("${src}")`;
-    d.addEventListener('animationend', () => d.remove());
-    layer.appendChild(d);
+    spawn(x, y);
   }, { passive: true });
+
+  /* drop one circle the moment the section turns light, so the trail is hinted
+     at even if the cursor is sitting still */
+  let wasLight = section.classList.contains('is-flipped');
+  new MutationObserver(() => {
+    const light = section.classList.contains('is-flipped');
+    if (light && !wasLight) {
+      const r = stage.getBoundingClientRect();
+      const inside = lastClient &&
+        lastClient.y > r.top && lastClient.y < r.bottom &&
+        lastClient.x > r.left && lastClient.x < r.right;
+      spawn(inside ? lastClient.x - r.left : r.width / 2,
+            inside ? lastClient.y - r.top  : r.height / 2);
+    }
+    if (!light) lx = ly = null;
+    wasLight = light;
+  }).observe(section, { attributes: true, attributeFilter: ['class'] });
 })();
 </script>
 
