@@ -588,8 +588,290 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .tm-track { animation: none; }
     .belief-right .w { opacity: 1 !important; }
     .belief, .belief-phase { transition: none; }
+  }
+
+  /* ---------- testimonials (horizontal carousel) ---------- */
+
+  .tm {
+    padding: 140px 0 160px;
+  }
+
+  .tm-head {
+    max-width: 1240px;
+    margin: 0 auto 64px;
+    padding: 0 clamp(20px, 4vw, 48px);
+    text-align: center;
+  }
+
+  .tm-head h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(30px, 6.4vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;       /* the title holds one line */
+  }
+
+  /* rail — cards drift left on their own, two identical runs for a seamless loop */
+  .tm-rail {
+    --tm-gap: 24px;
+    --tm-speed: 70s;
+    position: relative;
+    max-width: min(1180px, 86vw);   /* rail stops well short of the screen edges */
+    margin: 0 auto;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 1%, #000 99%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 1%, #000 99%, transparent);
+  }
+
+  .tm-track {
+    display: flex;
+    width: max-content;
+    gap: var(--tm-gap);
+    padding: 4px 0;
+    animation: tm-left var(--tm-speed) linear infinite;
+  }
+  .tm-rail:hover .tm-track { animation-play-state: paused; }
+
+  @keyframes tm-left {
+    to { transform: translateX(calc(-50% - var(--tm-gap) / 2)); }
+  }
+
+  .tm-card {
+    flex: 0 0 clamp(280px, 31vw, 390px);
+    display: flex;
+    flex-direction: column;
+    min-height: 340px;
+    padding: 30px 30px 28px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  .tm-mark {
+    font-family: var(--serif);
+    font-size: 40px;
+    line-height: .6;
+    color: var(--ink-3);
+  }
+
+  .tm-quote {
+    margin: 18px 0 0;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.4;
+    letter-spacing: -.02em;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tm-quote::after { content: "”"; font-family: var(--serif); }
+
+  /* person — grey avatar placeholder, name over role */
+  .tm-person {
+    margin-top: auto;
+    padding-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .tm-avatar {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    background: #dcdcdc;
+  }
+
+  .tm-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .tm-role {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-3);
+  }
+
+  /* ---------- faqs (title left, divider rows right) ---------- */
+
+  .faq {
+    padding: 96px 0 104px;
+  }
+
+  .faq-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.2fr);
+    gap: clamp(40px, 6vw, 96px);   /* same measure as the belief section */
+    align-items: start;
+  }
+
+  /* indents the title block toward the questions, questions stay put */
+  .faq-left { padding-left: clamp(0px, 10vw, 96px); }
+
+  .faq-inner h2 {
+    margin: -10px 0 0;         /* optical: lifts the title off the first row */
+    font-family: var(--sans);
+    font-size: clamp(38px, 6.6vw, 78px);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* square placeholder for the illustration that goes here later */
+  .faq-figure {
+    width: min(250px, 80%);
+    aspect-ratio: 1;
+    margin: 40px auto 0 0;
+    background: #dcdcdc;
+    border-radius: 14px;
+  }
+
+  /* rows, not boxes — a hairline between each question keeps the set on one screen */
+  .faq-list {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .faq-q {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 19px 4px;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: opacity .2s ease;
+  }
+  .faq-q:hover { opacity: .62; }
+
+  /* chevron drawn from two borders — points down, flips up when open */
+  .faq-chev {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-right: 1.5px solid var(--ink-3);
+    border-bottom: 1.5px solid var(--ink-3);
+    transform: rotate(45deg);
+    transition: transform .28s ease, margin .28s ease;
+  }
+  .faq-item.is-open .faq-chev {
+    margin-top: 4px;
+    transform: rotate(225deg);
+  }
+
+  /* 0fr -> 1fr animates the panel open without hard-coding a height */
+  .faq-a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .3s ease;
+  }
+  .faq-item.is-open .faq-a { grid-template-rows: 1fr; }
+  .faq-a > div { overflow: hidden; }
+
+  .faq-a p {
+    margin: 0;
+    padding: 2px 56px 24px 4px;
+    max-width: 760px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-a, .faq-chev { transition: none; }
+  }
+
+  /* ---------- closer (card: copy left, image right) ---------- */
+
+  .closer {
+    padding: 20px 0 140px;
+  }
+
+  .closer-card {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(28px, 3.4vw, 52px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 4vw, 64px);
+    align-items: center;
+  }
+
+  .closer-copy h2 {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: clamp(28px, 3.4vw, 50px);
+    line-height: 1.05;
+    letter-spacing: -.045em;
+    font-weight: 700;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .closer-copy p {
+    margin: 20px 0 0;
+    max-width: 480px;
+    font-size: clamp(15px, 1.5vw, 18px);
+    line-height: 1.55;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .closer-actions { margin-top: 32px; }
+
+  .closer-link {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .closer-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* image placeholder — grey block with the usual crossed diagonals */
+  .closer-media {
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    background-color: #dcdcdc;
+    background-image:
+      linear-gradient(to top right,
+        transparent calc(50% - .5px), #c4c4c4 50%, transparent calc(50% + .5px)),
+      linear-gradient(to bottom right,
+        transparent calc(50% - .5px), #c4c4c4 50%, transparent calc(50% + .5px));
   }
 
   /* ---------- sticky qr card (bottom right) ---------- */
@@ -750,6 +1032,22 @@
     }
     .belief-right { max-width: none; }
     .belief-right p { margin-bottom: 16px; }
+    .tm { padding: 88px 0 104px; }
+    .tm-head { margin-bottom: 40px; }
+    .tm-head h2 { white-space: normal; font-size: clamp(30px, 7.4vw, 42px); }
+    .tm-rail { --tm-gap: 16px; --tm-speed: 50s; max-width: 92vw; }
+    .tm-card { flex-basis: min(300px, 82vw); min-height: 300px; padding: 24px; }
+    .faq { padding: 80px 0 96px; }
+    .faq { padding: 72px 0 84px; }
+    .faq-inner { grid-template-columns: 1fr; gap: 28px; }
+    .faq-inner h2 { margin-top: 0; font-size: clamp(30px, 7.4vw, 42px); }
+    .faq-left { padding-left: 0; }
+    .faq-figure { width: 180px; margin: 28px auto 0 0; }
+    .faq-q { padding: 16px 2px; font-size: 16px; }
+    .faq-a p { padding: 0 32px 20px 2px; }
+    .closer { padding: 8px 16px 88px; }
+    .closer-card { grid-template-columns: 1fr; gap: 28px; padding: 24px; border-radius: 20px; }
+    .closer-actions { margin-top: 24px; }
     .qr-card { right: 16px; bottom: 16px; gap: 12px; padding: 12px 14px; }
     .qr-card-text { font-size: 14px; max-width: 100px; }
     .qr-code { width: 60px; height: 60px; }
@@ -985,6 +1283,205 @@
     </div>
   </section>
 
+  <!-- ===== mission — placeholder, one screen tall ===== -->
+  <section class="section-stub" id="mission">mission section</section>
+
+  <!-- ===== testimonials — horizontal card rail ===== -->
+  <section class="tm" id="testimonials" aria-label="what our users are saying">
+    <header class="tm-head">
+      <h2>what our users are saying.</h2>
+    </header>
+
+    <div class="tm-rail">
+      <div class="tm-track" id="tm-track">
+      <article class="tm-card">
+        <span class="tm-mark" aria-hidden="true">“</span>
+        <p class="tm-quote">i recorded three voice notes on the bus home. that was the whole application.</p>
+        <footer class="tm-person">
+          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-meta">
+            <span class="tm-name">maya r.</span>
+            <span class="tm-role">final year cs, manchester</span>
+          </span>
+        </footer>
+      </article>
+
+      <article class="tm-card">
+        <span class="tm-mark" aria-hidden="true">“</span>
+        <p class="tm-quote">i had an answer in four days. not a template — someone had actually watched my pitch.</p>
+        <footer class="tm-person">
+          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-meta">
+            <span class="tm-name">daniel o.</span>
+            <span class="tm-role">grad, product design</span>
+          </span>
+        </footer>
+      </article>
+
+      <article class="tm-card">
+        <span class="tm-mark" aria-hidden="true">“</span>
+        <p class="tm-quote">i'd sent about 200 applications before this. this was the first time anyone replied like a person.</p>
+        <footer class="tm-person">
+          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-meta">
+            <span class="tm-name">priya s.</span>
+            <span class="tm-role">econ grad, london</span>
+          </span>
+        </footer>
+      </article>
+
+      <article class="tm-card">
+        <span class="tm-mark" aria-hidden="true">“</span>
+        <p class="tm-quote">i built the passport once. every role after that took minutes instead of an evening.</p>
+        <footer class="tm-person">
+          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-meta">
+            <span class="tm-name">tom a.</span>
+            <span class="tm-role">self taught dev</span>
+          </span>
+        </footer>
+      </article>
+
+      <article class="tm-card">
+        <span class="tm-mark" aria-hidden="true">“</span>
+        <p class="tm-quote">knowing a human reads it changes what you bother to say. i stopped writing for a robot.</p>
+        <footer class="tm-person">
+          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-meta">
+            <span class="tm-name">aisha k.</span>
+            <span class="tm-role">msc data science</span>
+          </span>
+        </footer>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== faqs — title left, accordion right ===== -->
+  <section class="faq" id="faqs" aria-label="frequently asked questions">
+    <div class="faq-inner">
+
+      <div class="faq-left">
+        <h2>frequently <br /> asked <br /> questions</h2>
+        <div class="faq-figure" aria-hidden="true"></div>
+      </div>
+
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-1">
+            <span>what does the 7 day answer actually mean?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-1" role="region">
+            <div><p>apply to any role through us and the startup replies within 7 days. a real human, a real decision, and a reason if it's a no. that's the rule every startup signs up to. the tracker's 6,000+ external jobs work differently: you apply to those direct on the company's own site, so the 7 days doesn't cover them.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-2">
+            <span>what happens after I apply?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-2" role="region">
+            <div><p>you'll see your application is under review. founders see everyone who applies, and we shortlist the strongest fits for them. shortlisted or not, you'll hear back within 7 days from an actual human at the startup. and once you're in the pool, you don't always have to apply: if you're a strong fit for a role, we'll flag you to the founder anyway.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-3">
+            <span>who else is using it?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-3" role="region">
+            <div><p>students and grads from across the UK, Europe and North America, from 55+ universities. some from Oxford and Imperial, plenty from everywhere else. we don't filter by university. if you can show what you can do, you're in.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-4">
+            <span>is it free?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-4" role="region">
+            <div><p>yes. free for candidates, always. startups pay to hire. you never pay to apply.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-5">
+            <span>do I need a CV or experience?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-5" role="region">
+            <div><p>no CV. your passport replaces it: a 60 second video pitch and a walkthrough of the best thing you've made or done. a uni project, a side project, a hackathon build, a campaign you ran, a society you grew. if you did it and can explain it, it counts. it takes 2 hours, once, and you can redo it whenever you want to improve.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-6">
+            <span>what if I don't meet the bar yet?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-6" role="region">
+            <div><p>you'll see exactly where to improve. redo it whenever you're ready. in the meantime, the tracker's 6,000+ roles stay open to you, and we'll point you to smaller startups and student startups where you can build more proof. platform roles open up once you meet the bar.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-7">
+            <span>what kind of roles and startups?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-7" role="region">
+            <div><p>early stage, VC backed startups, mostly on project based roles across software, marketing, design, hardware and ops. early career to mid career, including experienced startup operators. year five responsibility in year one.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-8">
+            <span>what if I don't get matched straight away?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-8" role="region">
+            <div><p>roles come to you as they open, and we ping your phone when one fits. in the meantime the tracker is live with 6,000+ roles you can apply to today.</p></div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a-9">
+            <span>what happens to my video and my work?</span>
+            <span class="faq-chev" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" id="faq-a-9" role="region">
+            <div><p>founders see it when you apply to their role. nobody else. we never sell it, share it, or train anything on it. private work can be redacted, or shared with access you control. delete it whenever you want.</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== closer — copy left, image right ===== -->
+  <section class="closer" aria-label="get seen">
+    <div class="closer-card">
+
+      <div class="closer-copy">
+        <h2>tired of the cooked job market?</h2>
+        <p>
+          get seen. early members get matched first. the tracker's live today.
+          save roles now, and get matched as new ones open.
+        </p>
+        <div class="closer-actions">
+          <button class="btn btn-primary" type="button">get seen</button>
+        </div>
+        <a class="closer-link" href="#for-startups">looking to hire instead? we got you &rarr;</a>
+      </div>
+
+      <div class="closer-media" aria-hidden="true"></div>
+
+    </div>
+  </section>
+
   <!-- ===== sticky qr card ===== -->
   <aside class="qr-card" id="qr-card">
     <p class="qr-card-text">see what's cooking</p>
@@ -1195,7 +1692,7 @@ class UncookedNav extends HTMLElement {
             <li><a class="link" href="#${l}"${l === active ? ' aria-current="page"' : ''}>${l}</a></li>
           `).join('')}
         </ul>
-        <button type="button">for startups <span class="arrow">&rarr;</span></button>
+        <button type="button">for recruiters <span class="arrow">&rarr;</span></button>
       </nav>
     `;
 
@@ -1320,6 +1817,126 @@ customElements.define('uncooked-nav', UncookedNav);
     layer.appendChild(d);
   }, { passive: true });
 })();
+</script>
+
+<script>
+/* ---- testimonials: duplicate the run so the drift loops seamlessly ---- */
+(() => {
+  const track = document.getElementById('tm-track');
+  if (!track) return;
+  const run = [...track.children];
+  run.forEach(card => {
+    const copy = card.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    track.appendChild(copy);
+  });
+})();
+</script>
+
+<script>
+/* ---- faqs: one panel open at a time ---- */
+(() => {
+  const list = document.getElementById('faq-list');
+  if (!list) return;
+
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('.faq-q');
+    if (!btn) return;
+    const item = btn.parentElement;
+    const open = item.classList.contains('is-open');
+
+    list.querySelectorAll('.faq-item.is-open').forEach(el => {
+      el.classList.remove('is-open');
+      el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+
+    if (!open) {
+      item.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "what does the 7 day answer actually mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "apply to any role through us and the startup replies within 7 days. a real human, a real decision, and a reason if it's a no. that's the rule every startup signs up to. the tracker's 6,000+ external jobs work differently: you apply to those direct on the company's own site, so the 7 days doesn't cover them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "what happens after I apply?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "you'll see your application is under review. founders see everyone who applies, and we shortlist the strongest fits for them. shortlisted or not, you'll hear back within 7 days from an actual human at the startup. and once you're in the pool, you don't always have to apply: if you're a strong fit for a role, we'll flag you to the founder anyway."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "who else is using it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "students and grads from across the UK, Europe and North America, from 55+ universities. some from Oxford and Imperial, plenty from everywhere else. we don't filter by university. if you can show what you can do, you're in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "is it free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "yes. free for candidates, always. startups pay to hire. you never pay to apply."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "do I need a CV or experience?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "no CV. your passport replaces it: a 60 second video pitch and a walkthrough of the best thing you've made or done. a uni project, a side project, a hackathon build, a campaign you ran, a society you grew. if you did it and can explain it, it counts. it takes 2 hours, once, and you can redo it whenever you want to improve."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "what if I don't meet the bar yet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "you'll see exactly where to improve. redo it whenever you're ready. in the meantime, the tracker's 6,000+ roles stay open to you, and we'll point you to smaller startups and student startups where you can build more proof. platform roles open up once you meet the bar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "what kind of roles and startups?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "early stage, VC backed startups, mostly on project based roles across software, marketing, design, hardware and ops. early career to mid career, including experienced startup operators. year five responsibility in year one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "what if I don't get matched straight away?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "roles come to you as they open, and we ping your phone when one fits. in the meantime the tracker is live with 6,000+ roles you can apply to today."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "what happens to my video and my work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "founders see it when you apply to their role. nobody else. we never sell it, share it, or train anything on it. private work can be redacted, or shared with access you control. delete it whenever you want."
+      }
+    }
+  ]
+}
 </script>
 
 </body>
