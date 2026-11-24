@@ -171,9 +171,15 @@
     top: 50%;
     width: var(--card-w);
     aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
     background: #dcdcdc;
     border: 1px solid var(--line);
     border-radius: 24px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--ink-3);
     box-shadow: 0 2px 6px rgba(0,0,0,.05), 0 14px 32px rgba(0,0,0,.10);
     pointer-events: auto;
     /* sit on the rim, tilted with the wheel */
@@ -244,11 +250,17 @@
 
   .marquee-card {
     flex: none;
+    display: grid;
+    place-items: center;
     width: var(--card-w);
     height: var(--card-h);
     border-radius: 12px;
     background: #dcdcdc;
     border: 1px solid var(--line);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--ink-3);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -285,7 +297,7 @@
     background: #dcdcdc;
     border: 1px solid var(--line);
     border-radius: 18px;
-    font-size: 52px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -.03em;
     color: var(--ink-3);
@@ -469,6 +481,8 @@
 
   .diff-card {
     flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
     width: var(--card-w);
     height: var(--card-h);
     padding: 32px 30px;
@@ -510,6 +524,29 @@
     font-weight: 500;
     color: var(--ink-2);
     text-align: left;
+  }
+
+  /* image placeholder — fills the card under the copy */
+  .diff-media {
+    flex: 1 1 auto;
+    min-height: 150px;
+    margin-top: 26px;
+    border-radius: 12px;
+    background-color: #c9c9c9;
+    background-image:
+      linear-gradient(to top right,
+        transparent calc(50% - .5px), #b0b0b0 50%, transparent calc(50% + .5px)),
+      linear-gradient(to bottom right,
+        transparent calc(50% - .5px), #b0b0b0 50%, transparent calc(50% + .5px));
+  }
+
+  .diff-card.is-dark .diff-media {
+    background-color: rgba(255,255,255,.10);
+    background-image:
+      linear-gradient(to top right,
+        transparent calc(50% - .5px), rgba(255,255,255,.22) 50%, transparent calc(50% + .5px)),
+      linear-gradient(to bottom right,
+        transparent calc(50% - .5px), rgba(255,255,255,.22) 50%, transparent calc(50% + .5px));
   }
 
   .diff-card.is-dark h3 { color: #f4f4f4; }
@@ -864,12 +901,16 @@
 
   .tm-avatar {
     flex: 0 0 auto;
+    display: grid;
+    place-items: center;
     width: 44px;
     height: 44px;
     border-radius: 999px;
     background: #ececec;
     border: 1px solid var(--line-soft);
+    color: #b4b4b4;
   }
+  .tm-avatar svg { width: 24px; height: 24px; display: block; }
 
   .tm-tag {
     flex: 0 0 auto;
@@ -1316,6 +1357,12 @@
 
   /* large placeholder block under the copy */
   .mission-figure {
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: var(--ink-3);
     max-width: 760px;
     margin: clamp(72px, 8vw, 110px) auto 0;
     width: calc(100% - 2 * clamp(20px, 4vw, 48px));
@@ -1530,7 +1577,7 @@
       position: static;
       order: 2;
       transform: none;
-      font-size: 44px;
+      font-size: 20px;
     }
     .orbit { display: none; }
     .how-nav { bottom: 16px; }
@@ -1548,6 +1595,7 @@
       padding-bottom: 72px;
     }
     .diff-card { height: auto; min-height: 220px; }
+    .diff-media { min-height: 170px; margin-top: 20px; }
     .diff-card + .diff-card { margin-left: 0; }
     .diff-card:nth-child(1),
     .diff-card:nth-child(2),
@@ -1683,27 +1731,27 @@
     <!-- slowly turning wheel of overlapping cards -->
     <div class="wheel" aria-hidden="true">
       <div class="wheel-rotor" id="wheel-rotor">
-        <span class="wheel-card" style="--a: -180.0deg"></span>
-        <span class="wheel-card" style="--a: -162.86deg"></span>
-        <span class="wheel-card" style="--a: -145.71deg"></span>
-        <span class="wheel-card" style="--a: -128.57deg"></span>
-        <span class="wheel-card" style="--a: -111.43deg"></span>
-        <span class="wheel-card" style="--a: -94.29deg"></span>
-        <span class="wheel-card" style="--a: -77.14deg"></span>
-        <span class="wheel-card" style="--a: -60.0deg"></span>
-        <span class="wheel-card" style="--a: -42.86deg"></span>
-        <span class="wheel-card" style="--a: -25.71deg"></span>
-        <span class="wheel-card" style="--a: -8.57deg"></span>
-        <span class="wheel-card" style="--a: 8.57deg"></span>
-        <span class="wheel-card" style="--a: 25.71deg"></span>
-        <span class="wheel-card" style="--a: 42.86deg"></span>
-        <span class="wheel-card" style="--a: 60.0deg"></span>
-        <span class="wheel-card" style="--a: 77.14deg"></span>
-        <span class="wheel-card" style="--a: 94.29deg"></span>
-        <span class="wheel-card" style="--a: 111.43deg"></span>
-        <span class="wheel-card" style="--a: 128.57deg"></span>
-        <span class="wheel-card" style="--a: 145.71deg"></span>
-        <span class="wheel-card" style="--a: 162.86deg"></span>
+        <span class="wheel-card" style="--a: -180.0deg">event pic</span>
+        <span class="wheel-card" style="--a: -162.86deg">event pic</span>
+        <span class="wheel-card" style="--a: -145.71deg">event pic</span>
+        <span class="wheel-card" style="--a: -128.57deg">event pic</span>
+        <span class="wheel-card" style="--a: -111.43deg">event pic</span>
+        <span class="wheel-card" style="--a: -94.29deg">event pic</span>
+        <span class="wheel-card" style="--a: -77.14deg">event pic</span>
+        <span class="wheel-card" style="--a: -60.0deg">event pic</span>
+        <span class="wheel-card" style="--a: -42.86deg">event pic</span>
+        <span class="wheel-card" style="--a: -25.71deg">event pic</span>
+        <span class="wheel-card" style="--a: -8.57deg">event pic</span>
+        <span class="wheel-card" style="--a: 8.57deg">event pic</span>
+        <span class="wheel-card" style="--a: 25.71deg">event pic</span>
+        <span class="wheel-card" style="--a: 42.86deg">event pic</span>
+        <span class="wheel-card" style="--a: 60.0deg">event pic</span>
+        <span class="wheel-card" style="--a: 77.14deg">event pic</span>
+        <span class="wheel-card" style="--a: 94.29deg">event pic</span>
+        <span class="wheel-card" style="--a: 111.43deg">event pic</span>
+        <span class="wheel-card" style="--a: 128.57deg">event pic</span>
+        <span class="wheel-card" style="--a: 145.71deg">event pic</span>
+        <span class="wheel-card" style="--a: 162.86deg">event pic</span>
       </div>
     </div>
 
@@ -1737,7 +1785,7 @@
       </div>
 
       <!-- mockup placeholder — number swaps as you scroll -->
-      <div class="how-mock" id="how-mock" aria-hidden="true">01</div>
+      <div class="how-mock" id="how-mock" aria-hidden="true">mockup 1</div>
 
       <!-- copy — swaps as you scroll -->
       <div class="how-copy" id="how-copy">
@@ -1760,13 +1808,13 @@
    ============================================================ */
 (() => {
   const STEPS = [
-    { n: '01', label: 'build passport', title: 'build your passport',
+    { n: '01', mock: 'mockup 1', label: 'build passport', title: 'build your passport',
       body: "a video pitch and the best thing you've made or done. once, on the platform." },
-    { n: '02', label: 'get matched', title: 'get matched',
+    { n: '02', mock: 'mockup 2', label: 'get matched', title: 'get matched',
       body: 'meet the bar and roles come to you. we ping your phone when one fits.' },
-    { n: '03', label: 'apply', title: 'apply in minutes',
+    { n: '03', mock: 'mockup 3', label: 'apply', title: 'apply in minutes',
       body: '3 voice notes from your phone, or record on the platform. under 5 minutes. from the bus if you want.' },
-    { n: '04', label: 'hear back', title: 'hear back. always.',
+    { n: '04', mock: 'mockup 4', label: 'hear back', title: 'hear back. always.',
       body: "from an actual human at the startup. not a bot. not an AI recruiter. it's the rule." }
   ];
 
@@ -1815,7 +1863,7 @@
     buttons.forEach((b, j) => b.setAttribute('aria-current', String(j === i)));
 
     const paint = () => {
-      mock.textContent = s.n;
+      mock.textContent = s.mock;
       copy.innerHTML = `<h2>${s.title}</h2><p>${s.body}</p>`;
       copy.classList.remove('is-swapping');
     };
@@ -1921,18 +1969,22 @@
       <article class="diff-card">
         <h3>startup roles come to you.</h3>
         <p>no more hours lost searching across job boards, group chats, and socials. discover startup opportunities in one place. less searching, more applying.</p>
+        <div class="diff-media" aria-hidden="true"></div>
       </article>
       <article class="diff-card is-dark">
         <h3>you never repeat the work.</h3>
         <p>two honest hours, once. your proof travels with every application after that. no fresh brief for every company. no rewriting your story 140 times.</p>
+        <div class="diff-media" aria-hidden="true"></div>
       </article>
       <article class="diff-card">
         <h3>a human always reviews you.</h3>
         <p>nothing here is auto rejected by a bot. real review, and a real person makes the call.</p>
+        <div class="diff-media" aria-hidden="true"></div>
       </article>
       <article class="diff-card">
         <h3>a response is the rule.</h3>
         <p>every application through us gets an answer within 7 days. from an actual human at the startup. not a bot. not an AI recruiter.</p>
+        <div class="diff-media" aria-hidden="true"></div>
       </article>
     </div>
   </section>
@@ -2018,7 +2070,7 @@
       </p>
     </div>
 
-    <div class="mission-figure" aria-hidden="true"></div>
+    <div class="mission-figure" aria-hidden="true">team pic</div>
 
     <div class="mission-outro">
       <p>
@@ -2043,7 +2095,12 @@
       <div class="tm-track" id="tm-track">
       <article class="tm-card">
         <header class="tm-card-top">
-          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8.6" r="3.9" />
+              <path d="M4.5 20.6a7.5 7.5 0 0 1 15 0z" />
+            </svg>
+          </span>
         </header>
         <span class="tm-mark" aria-hidden="true">&ldquo;</span>
         <p class="tm-quote">didn't get the role. but I heard back in 5 days with an actual reason. first time that's ever happened. I'll be using it again.</p>
@@ -2055,7 +2112,12 @@
 
       <article class="tm-card">
         <header class="tm-card-top">
-          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8.6" r="3.9" />
+              <path d="M4.5 20.6a7.5 7.5 0 0 1 15 0z" />
+            </svg>
+          </span>
         </header>
         <span class="tm-mark" aria-hidden="true">&ldquo;</span>
         <p class="tm-quote">got the role. verified once, applied from my phone, had a call booked within the week.</p>
@@ -2067,7 +2129,12 @@
 
       <article class="tm-card">
         <header class="tm-card-top">
-          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8.6" r="3.9" />
+              <path d="M4.5 20.6a7.5 7.5 0 0 1 15 0z" />
+            </svg>
+          </span>
         </header>
         <span class="tm-mark" aria-hidden="true">&ldquo;</span>
         <p class="tm-quote">recorded three voice notes on the bus home. that was the whole application.</p>
@@ -2079,7 +2146,12 @@
 
       <article class="tm-card">
         <header class="tm-card-top">
-          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8.6" r="3.9" />
+              <path d="M4.5 20.6a7.5 7.5 0 0 1 15 0z" />
+            </svg>
+          </span>
         </header>
         <span class="tm-mark" aria-hidden="true">&ldquo;</span>
         <p class="tm-quote">built the passport once. every role after that took minutes instead of an evening.</p>
@@ -2091,7 +2163,12 @@
 
       <article class="tm-card">
         <header class="tm-card-top">
-          <span class="tm-avatar" aria-hidden="true"></span>
+          <span class="tm-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8.6" r="3.9" />
+              <path d="M4.5 20.6a7.5 7.5 0 0 1 15 0z" />
+            </svg>
+          </span>
           <span class="tm-tag">[track]</span>
         </header>
         <span class="tm-mark" aria-hidden="true">&ldquo;</span>
@@ -2329,6 +2406,7 @@
   for (let i = 0; i < CARDS; i++) {
     const card = document.createElement('div');
     card.className = 'marquee-card';
+    card.textContent = 'uni logo';
     run.appendChild(card);
   }
   track.appendChild(run);
