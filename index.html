@@ -60,18 +60,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;   /* body of the page sits centred in the viewport */
+    justify-content: flex-start;   /* copy sits high, just under the navbar */
     gap: 0;
     max-width: 820px;
     margin: 0 auto;
-    padding: 48px 20px 72px;
+    padding: 44px 20px 72px;
     text-align: center;
   }
 
   .hero h1 {
     margin: 0;
-    font-size: clamp(44px, 9vw, 92px);
-    line-height: 1.02;
+    font-size: clamp(40px, 8vw, 80px);
+    line-height: 1.03;
     letter-spacing: -.045em;
     font-weight: 700;
     color: var(--ink);
@@ -88,8 +88,8 @@
 
   .hero p {
     margin: 26px auto 0;
-    max-width: 620px;
-    font-size: clamp(15px, 2.1vw, 19px);
+    max-width: 760px;          /* wide enough to hold two lines */
+    font-size: clamp(14px, 1.9vw, 17.5px);
     line-height: 1.55;
     font-weight: 500;
     color: var(--ink-2);
@@ -131,6 +131,75 @@
   .btn-secondary:hover { background: var(--surface); border-color: var(--ink-3); }
 
   :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  /* ---------- hero card wheel ---------- */
+
+  .hero-shell {
+    position: relative;
+    overflow: hidden;          /* the hub of the wheel is below the fold */
+  }
+
+  .wheel {
+    --r: 1050px;               /* big radius = shallow arc, as in the ref */
+    --card-w: 235px;
+    --drop: 840px;             /* how far below the hero the hub sits */
+    position: absolute;
+    left: 50%;
+    bottom: calc((var(--r) + var(--drop)) * -1);
+    width: calc(var(--r) * 2);
+    height: calc(var(--r) * 2);
+    margin-left: calc(var(--r) * -1);
+    z-index: 0;
+    pointer-events: none;      /* only the cards themselves are hoverable */
+  }
+
+  .wheel-rotor {
+    position: absolute;
+    inset: 0;
+    animation: wheel-spin 140s linear infinite;   /* steady, not quick */
+  }
+  .wheel:hover .wheel-rotor,
+  .wheel.is-parked .wheel-rotor { animation-play-state: paused; }
+
+  @keyframes wheel-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .wheel-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--card-w);
+    aspect-ratio: 4 / 5;
+    background: #dcdcdc;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.05), 0 14px 32px rgba(0,0,0,.10);
+    pointer-events: auto;
+    /* sit on the rim, tilted with the wheel */
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--a))
+      translateY(calc(var(--r) * -1));
+    transition: transform .3s cubic-bezier(.3,0,.2,1), box-shadow .3s ease;
+  }
+
+  /* hovering lifts that card clear of the others */
+  .wheel-card:hover {
+    z-index: 5;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--a))
+      translateY(calc(var(--r) * -1 - 22px))
+      scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,.07), 0 26px 54px rgba(0,0,0,.18);
+  }
+
+  .hero { position: relative; z-index: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wheel-rotor { animation: none; }
+  }
 
   /* ---------- marquee (below the fold) ---------- */
 
@@ -1434,7 +1503,8 @@
 
   @media (max-width: 720px) {
     :root { --nav-top: 20px; --nav-h: 78px; }
-    .hero { padding: 32px 16px 56px; }
+    .hero { padding: 28px 16px 56px; }
+    .wheel { --r: 680px; --card-w: 148px; --drop: 540px; }
     .btn { width: 100%; max-width: 320px; }
     .marquee { --card-w: 170px; --card-h: 90px; --card-gap: 20px; padding: 48px 0 64px; }
     .how { --mock-w: min(270px, 62vw); --step-scroll: 80svh; }
@@ -1596,7 +1666,10 @@
   <!-- <a class="signin-pill" href="#sign-in">sign in</a> -->
 
   <!-- ===== hero ===== -->
+  <div class="hero-shell">
+
   <main class="hero">
+    <!-- <h1>from skills to startups</h1> -->
     <h1>never get ghosted</h1>
     <p>
       no CVs. no cover letters. no repeating yourself 140 times.
@@ -1606,6 +1679,35 @@
       <button class="btn btn-primary" type="button">get seen</button>
     </div>
   </main>
+
+    <!-- slowly turning wheel of overlapping cards -->
+    <div class="wheel" aria-hidden="true">
+      <div class="wheel-rotor" id="wheel-rotor">
+        <span class="wheel-card" style="--a: -180.0deg"></span>
+        <span class="wheel-card" style="--a: -162.86deg"></span>
+        <span class="wheel-card" style="--a: -145.71deg"></span>
+        <span class="wheel-card" style="--a: -128.57deg"></span>
+        <span class="wheel-card" style="--a: -111.43deg"></span>
+        <span class="wheel-card" style="--a: -94.29deg"></span>
+        <span class="wheel-card" style="--a: -77.14deg"></span>
+        <span class="wheel-card" style="--a: -60.0deg"></span>
+        <span class="wheel-card" style="--a: -42.86deg"></span>
+        <span class="wheel-card" style="--a: -25.71deg"></span>
+        <span class="wheel-card" style="--a: -8.57deg"></span>
+        <span class="wheel-card" style="--a: 8.57deg"></span>
+        <span class="wheel-card" style="--a: 25.71deg"></span>
+        <span class="wheel-card" style="--a: 42.86deg"></span>
+        <span class="wheel-card" style="--a: 60.0deg"></span>
+        <span class="wheel-card" style="--a: 77.14deg"></span>
+        <span class="wheel-card" style="--a: 94.29deg"></span>
+        <span class="wheel-card" style="--a: 111.43deg"></span>
+        <span class="wheel-card" style="--a: 128.57deg"></span>
+        <span class="wheel-card" style="--a: 145.71deg"></span>
+        <span class="wheel-card" style="--a: 162.86deg"></span>
+      </div>
+    </div>
+
+  </div>
 
   <!-- ===== logo marquee — placeholder blocks, drifting left ===== -->
   <section class="marquee" aria-label="students and grads from">
@@ -2845,6 +2947,34 @@ customElements.define('uncooked-nav', UncookedNav);
   addEventListener('load', sync);
   customElements.whenDefined('uncooked-nav').then(sync);
   sync();
+})();
+</script>
+
+<script>
+/* ---- hero wheel turns until the proof strip is on screen, then parks ---- */
+(() => {
+  const wheel = document.querySelector('.wheel');
+  const strip = document.querySelector('.marquee');
+  if (!wheel || !strip) return;
+
+  function update() {
+    const r = strip.getBoundingClientRect();
+    /* "on screen" = properly in view, not merely touching the bottom edge */
+    const showing = r.top < innerHeight * 0.85 && r.bottom > 0;
+    wheel.classList.toggle('is-parked', showing);
+  }
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  };
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  addEventListener('load', update);
+  update();
 })();
 </script>
 
